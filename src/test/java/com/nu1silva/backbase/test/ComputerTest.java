@@ -73,7 +73,7 @@ public class ComputerTest extends TestBase {
     }
 
     @Test(priority = 40)
-    public void testCreateWithBlankValues() throws InterruptedException {
+    public void testCreateWithBlankValues() {
         driver.get(APPLICATION_URL);
         homePage.btnAddComputer().click();
         addComputerPage.txtBoxName().sendKeys("");
@@ -82,6 +82,17 @@ public class ComputerTest extends TestBase {
         addComputerPage.btnCreate().click();
         Assert.assertEquals(driver.findElement(By.xpath("//*[@id=\"main\"]/form/fieldset/div[1]/div/span")).getText(),
                 "Required", "error message mismatch");
+    }
+
+    @Test(priority = 41)
+    public void testCreateWithInvalidDateFormat() {
+        driver.get(APPLICATION_URL);
+        homePage.btnAddComputer().click();
+        addComputerPage.txtBoxName().sendKeys("temp");
+        addComputerPage.txtBoxIntroduced().sendKeys("2018-02-201");
+        addComputerPage.txtBoxDiscontinued().sendKeys("02-20-2018");
+        addComputerPage.btnCreate().click();
+        Assert.assertTrue(driver.getPageSource().contains("clearfix error"));
     }
 
     @Test(priority = 50)
@@ -96,7 +107,7 @@ public class ComputerTest extends TestBase {
         String arr[] = headerValue.split(" ", 2);
         int numberOfResults = Integer.parseInt(arr[0]);
 
-        Assert.assertEquals(numberOfResults,3, "result number missmatch");
+        Assert.assertEquals(numberOfResults, 3, "result number missmatch");
 
         // Cleanup
         computers.deleteComputer("nuwan-pc-01");
